@@ -14,6 +14,7 @@ use Magento\Catalog\Helper\ImageFactory;
 use Magento\Catalog\Model\Product\Image\NotLoadInfoImageException;
 use Magento\Catalog\Ui\DataProvider\Product\ProductRenderCollectorInterface;
 use Magento\Framework\App\State;
+use Magento\Framework\View\Design\ThemeInterface;
 use Magento\Framework\View\DesignInterface;
 use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
@@ -97,13 +98,14 @@ class Image implements ProductRenderCollectorInterface
     }
 
     /**
-     * In order to allow to use image generation using Services, we need to emulate area code and store code
-     *
      * @inheritdoc
      */
     public function collect(ProductInterface $product, ProductRenderInterface $productRender)
     {
         $images = [];
+        /** @var ThemeInterface $currentTheme */
+        $currentTheme = $this->design->getDesignTheme();
+        $this->design->setDesignTheme($currentTheme);
 
         foreach ($this->imageCodes as $imageCode) {
             /** @var ImageInterface $image */

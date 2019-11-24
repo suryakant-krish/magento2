@@ -145,12 +145,19 @@ define([
             var loginFormSelector = 'form[data-role=email-with-possible-login]',
                 usernameSelector = loginFormSelector + ' input[name=username]',
                 loginForm = $(loginFormSelector),
-                validator;
+                validator,
+                valid;
 
             loginForm.validation();
 
             if (focused === false && !!this.email()) {
-                return !!$(usernameSelector).valid();
+                valid = !!$(usernameSelector).valid();
+
+                if (valid) {
+                    $(usernameSelector).removeAttr('aria-invalid aria-describedby');
+                }
+
+                return valid;
             }
 
             validator = loginForm.validate();
@@ -180,11 +187,15 @@ define([
         },
 
         /**
-         * Resolves an initial sate of a login form.
+         * Resolves an initial state of a login form.
          *
          * @returns {Boolean} - initial visibility state.
          */
         resolveInitialPasswordVisibility: function () {
+            if (checkoutData.getInputFieldEmailValue() !== '' && checkoutData.getCheckedEmailValue() === '') {
+                return true;
+            }
+
             if (checkoutData.getInputFieldEmailValue() !== '') {
                 return checkoutData.getInputFieldEmailValue() === checkoutData.getCheckedEmailValue();
             }

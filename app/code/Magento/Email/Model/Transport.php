@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Email\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -87,7 +89,7 @@ class Transport implements TransportInterface
     public function sendMessage()
     {
         try {
-            $zendMessage = Message::fromString($this->message->getRawMessage());
+            $zendMessage = Message::fromString($this->message->getRawMessage())->setEncoding('utf-8');
             if (2 === $this->isSetReturnPath && $this->returnPathValue) {
                 $zendMessage->setSender($this->returnPathValue);
             } elseif (1 === $this->isSetReturnPath && $zendMessage->getFrom()->count()) {
